@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Hunt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+        }
+        .map-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        .map-container img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .marker {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background: url('https://cdn-icons-png.flaticon.com/512/684/684908.png') no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+            transform: translate(-50%, -100%);
+        }
+        .clue {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            color: #555;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Treasure Hunt</h1>
+        <div class="map-container">
+            <img src="file:///C:/Users/Marios/Desktop/SPRINT/custom_map.png" alt="Park Map">
+            <div class="marker" id="marker1" style="top: 30%; left: 40%;"></div>
+            <div class="marker" id="marker2" style="top: 60%; left: 50%; display: none;"></div>
+            <div class="marker" id="marker3" style="top: 80%; left: 20%; display: none;"></div>
+        </div>
+        <p class="clue">Welcome! Click the first marker to begin your treasure hunt.</p>
+        <input type="text" id="answer" placeholder="Enter your answer here" style="display: none;">
+        <button id="actionButton" style="display: none;">Submit</button>
+        <p id="feedback" class="success" style="display: none;"></p>
+    </div>
+
+    <script>
+        const clues = [
+            "I am not alive, but I can grow. I don't have lungs, but I need air. What am I?", // Answer: Fire
+            "I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?", // Answer: Echo
+            "The more of me you take, the more you leave behind. What am I?" // Answer: Footsteps
+        ];
+
+        const answers = ["fire", "echo", "footsteps"];
+
+        let currentClueIndex = -1;
+
+        const clueElement = document.querySelector('.clue');
+        const answerInput = document.getElementById('answer');
+        const actionButton = document.getElementById('actionButton');
+        const feedback = document.getElementById('feedback');
+
+        const markers = [
+            document.getElementById('marker1'),
+            document.getElementById('marker2'),
+            document.getElementById('marker3')
+        ];
+
+        markers.forEach((marker, index) => {
+            marker.addEventListener('click', () => {
+                if (index === currentClueIndex + 1) {
+                    currentClueIndex++;
+                    clueElement.textContent = clues[currentClueIndex];
+                    answerInput.style.display = "block";
+                    actionButton.style.display = "inline-block";
+                } else {
+                    alert("Solve the previous clue first!");
+                }
+            });
+        });
+
+        actionButton.addEventListener('click', () => {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            if (userAnswer === answers[currentClueIndex]) {
+                feedback.style.display = "block";
+                feedback.textContent = "Correct!";
+
+                // Move to next clue or end the game
+                if (currentClueIndex < clues.length - 1) {
+                    markers[currentClueIndex + 1].style.display = "block";
+                    answerInput.value = "";
+                    answerInput.style.display = "none";
+                    actionButton.style.display = "none";
+                } else {
+                    clueElement.textContent = "Congratulations! You've completed the treasure hunt!";
+                    answerInput.style.display = "none";
+                    actionButton.style.display = "none";
+                }
+            } else {
+                feedback.style.display = "block";
+                feedback.textContent = "Incorrect, try again.";
+            }
+        });
+    </script>
+</body>
+</html>
